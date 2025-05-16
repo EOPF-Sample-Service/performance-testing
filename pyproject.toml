@@ -1,0 +1,25 @@
+[project]
+authors = [{name = "Christoph Reimer", email = "christoph.reimer@eodc.eu"}]
+dependencies = []
+name = "performance-testing"
+requires-python = ">= 3.11"
+version = "0.1.0"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tool.pixi.pypi-dependencies]
+performance_testing = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+locust = ">=2.35.0,<3"
+
+[tool.pixi.host-dependencies]
+pre-commit = ">=4.2.0,<5"
