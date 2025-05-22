@@ -20,6 +20,7 @@ performance_testing = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
 locust = ">=2.35.0,<3"
+pandas = ">=2.2.3,<3"
 
 [tool.pixi.host-dependencies]
 pre-commit = ">=4.2.0,<5"
