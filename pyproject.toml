@@ -21,5 +21,8 @@ performance_testing = { path = ".", editable = true }
 [tool.pixi.dependencies]
 locust = ">=2.35.0,<3"
 
-[tool.pixi.host-dependencies]
+[tool.pixi.feature.development.dependencies]
 pre-commit = ">=4.2.0,<5"
+
+[tool.pixi.environments]
+dev = {features = ["development"]}
