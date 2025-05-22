@@ -49,6 +49,15 @@ class LocustExporter:
 
         # iterate over all rows in the df, columns are the metric
         with open(self.prom_metric_file, "a") as promf:
+            # write html
+            html_body = """
+            <html>
+                <head></head>
+                <body>
+                    <pre>
+            """
+            promf.write(html_body)
+
             # write stats
             for _, row in df.iterrows():
                 labels_str = ",".join(
@@ -68,17 +77,15 @@ class LocustExporter:
                         f"# TYPE {name} {self._metric_type}\n"
                         f"{name}{{{labels_str}}} {metric_val}\n"
                     )
-                    html_body = f"""
-                        <html>
-                            <head></head>
-                            <body>
-                                <pre>
-                                    {content}
-                                </pre>
-                            </body>
-                        </html>
-                        """
-                    promf.write(html_body)
+                    promf.write(content)
+
+            # write html
+            html_body = """
+                    </pre>
+                </body>
+            </html>
+            """
+            promf.write(html_body)
 
 
 def main():
