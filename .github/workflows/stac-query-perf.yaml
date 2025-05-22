@@ -1,0 +1,23 @@
+---
+name: Run STAC API performance tests
+
+on: workflow_dispatch
+
+jobs:
+  perform-load-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # Get environment ready
+      - name: Create pixi environment
+        uses: prefix-dev/setup-pixi@v0.8.3
+        env:
+          RUNNER_DEBUG: true
+        with:
+          pixi-version: v0.42.1
+          cache: true
+          locked: false
+      - run: |
+          pixi run locust -f ./src/performance_testing/stac_query.py --headless --run-time 30s --csv stac_query --users 10 --spawn-rate 1 -H https://stac.core.eopf.eodc.eu/
