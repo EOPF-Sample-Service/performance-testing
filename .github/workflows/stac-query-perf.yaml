@@ -1,7 +1,20 @@
 ---
 name: Run STAC API performance tests
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   perform-load-test:
@@ -25,3 +38,13 @@ jobs:
       - name: Export Prometheus metrics file
         run: |
           pixi run python ./src/performance_testing/locust2prometheus.py  ./stac_query_stats.csv
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: './metrics'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
