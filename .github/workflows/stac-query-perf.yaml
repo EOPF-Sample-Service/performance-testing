@@ -3,6 +3,8 @@ name: Run STAC API performance tests
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
