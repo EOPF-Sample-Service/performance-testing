@@ -40,11 +40,13 @@ jobs:
           pixi run python ./src/performance_testing/locust2prometheus.py  ./stac_query_stats.csv
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: './metrics'
+          path: './pages'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

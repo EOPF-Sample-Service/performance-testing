@@ -6,7 +6,14 @@ import pandas as pd
 class LocustExporter:
     def __init__(self, csv_path: str):
         self.csv_path = csv_path
-        self.prom_metric_file = os.path.join(os.path.dirname(csv_path), "metrics")
+        pages_dir = os.path.join(os.path.dirname(csv_path), "pages")
+        if not os.path.exists(pages_dir):
+            os.mkdir(pages_dir)
+        self.prom_metric_file = os.path.join(pages_dir, "metrics")
+        # create .nojekyl
+        with open(os.path.join(pages_dir, ".nojekyl"), "w") as nojekyl:
+            pass
+
         # remove metric file on existence
         if os.path.exists(self.prom_metric_file):
             os.remove(self.prom_metric_file)
