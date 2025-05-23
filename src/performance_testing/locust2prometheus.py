@@ -8,10 +8,7 @@ class LocustExporter:
         self.csv_path = csv_path
 
         pages_dir = os.path.join(os.path.dirname(self.csv_path), "pages")
-        metrics_dir = os.path.join(pages_dir, "metrics")
-        if not os.path.exists(metrics_dir):
-            os.makedirs(metrics_dir)
-        self.prom_metric_file = os.path.join(metrics_dir, "index.html")
+        self.prom_metric_file = os.path.join(pages_dir, "metrics")
         # create .nojekyl
         with open(os.path.join(pages_dir, ".nojekyl"), "w") as nojekyl:
             pass
@@ -51,17 +48,6 @@ class LocustExporter:
 
         # iterate over all rows in the df, columns are the metric
         with open(self.prom_metric_file, "a") as promf:
-            # write html
-            html_body = """
-            <html>
-                <head>
-                    <meta http-equiv="content-type" content="text/plain; charset=UTF-8">
-                </head>
-                <body>
-                    <pre>
-            """
-            promf.write(html_body)
-
             # write stats
             for _, row in df.iterrows():
                 labels_str = ",".join(
@@ -82,14 +68,6 @@ class LocustExporter:
                         f"{name}{{{labels_str}}} {metric_val}\n"
                     )
                     promf.write(content)
-
-            # write html
-            html_body = """
-                    </pre>
-                </body>
-            </html>
-            """
-            promf.write(html_body)
 
 
 def main():
