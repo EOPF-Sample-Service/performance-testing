@@ -54,7 +54,9 @@ class LocustExporter:
             # write html
             html_body = """
             <html>
-                <head></head>
+                <head>
+                    <meta http-equiv="content-type" content="text/plain; charset=UTF-8">
+                </head>
                 <body>
                     <pre>
             """
