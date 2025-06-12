@@ -1,9 +1,9 @@
 [project]
 authors = [{name = "Christoph Reimer", email = "christoph.reimer@eodc.eu"}]
-dependencies = []
 name = "performance-testing"
 requires-python = ">= 3.11"
 version = "0.1.0"
+dependencies = ["prometheus-client>=0.22.1,<0.23"]
 
 [build-system]
 build-backend = "hatchling.build"

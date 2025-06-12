@@ -34,21 +34,21 @@ jobs:
           pixi-version: v0.42.1
           cache: true
           locked: false
-      - run: |
-          pixi run locust -f ./src/performance_testing/stac_query.py --headless --run-time 30s --csv stac_query --users 10 --spawn-rate 1 -H https://stac.core.eopf.eodc.eu/
-      # Export metrics for Prometheus
-      - name: Export Prometheus metrics file
+      - name: Run STAC query performance test
         run: |
-          pixi run python ./src/performance_testing/locust2prometheus.py  ./stac_query_stats.csv
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: './pages'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          pixi run locust -f ./src/performance_testing/stac_query.py \
+            --headless --run-time 30s \
+            --csv stac_query \
+            --users 10 --spawn-rate 1 -H https://stac.core.eopf.eodc.eu/
+      # Push metrics to Prometheus pushgateway
+      - name: Push metrics
+        env:
+          PUSHGATEWAY_ENDPOINT: ${{ secrets.PUSHGATEWAY_ENDPOINT }}
+          PUSHGATEWAY_USERNAME: ${{ secrets.PUSHGATEWAY_USERNAME }}
+          PUSHGATEWAY_PASSWORD: ${{ secrets.PUSHGATEWAY_PASSWORD }}
+        run: |
+          pixi run python ./src/performance_testing/locust2prometheus.py \
+            ./stac_query_stats.csv \
+            --pushgateway $PUSHGATEWAY_ENDPOINT \
+            --user $PUSHGATEWAY_USERNAME \
+            --password $PUSHGATEWAY_PASSWORD
