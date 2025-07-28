@@ -34,7 +34,7 @@ jobs:
           GIST_ID: ${{ secrets.BREVO_GIST_ID }}
         run : |
           FILE="./brevo-stats.csv"
-          CONTENT=$(cat $FILE | base64)
+          CONTENT=$(<"$FILE")
           curl -X PATCH "https://api.github.com/gists/$GIST_ID" \
             -H "Authorization: token ${{ secrets.BREVO_GIST_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
@@ -42,7 +42,7 @@ jobs:
               {
                 "files": {
                   "brevo-stats.csv": {
-                    "content": "$(cat $FILE)"
+                    "content": "$($CONTENT@Q)"
                   }
                 }
               }
