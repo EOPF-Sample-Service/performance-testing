@@ -1,0 +1,48 @@
+---
+name: Run performance metrics extraction of newsletters
+
+on:
+  workflow_dispatch:
+  schedule:
+    # run every second day at 14:00
+    - cron: "0 14 */2 * *"
+
+jobs:
+  newsletter-statistics:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # Get environment ready
+      - name: Create pixi environment
+        uses: prefix-dev/setup-pixi@v0.8.3
+        env:
+          RUNNER_DEBUG: true
+        with:
+          pixi-version: v0.42.1
+          cache: true
+          locked: false
+      - name: Run newsletter statistics aggregation
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+        run: |
+          pixi run python ./src/performance_testing/newsletter.py \
+            ./brevo-stats.csv
+      - name: Store csv as gist
+        env:
+          GIST_ID: ${{ secrets.BREVO_GIST_ID }}
+        run : |
+          FILE="./brevo-stats.csv"
+          CONTENT=$(cat $FILE | base64 | tr -d '\n')
+          curl -X PATCH "https://api.github.com/gists/$GIST_ID" \
+            -H "Authorization: token ${{ secrets.BREVO_GIST_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d @- <<EOF
+          {
+            "files": {
+              "brevo-stats.csv": {
+                "content": "$(cat $FILE)"
+              }
+            }
+          }
