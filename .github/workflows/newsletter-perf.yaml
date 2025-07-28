@@ -32,18 +32,8 @@ jobs:
       - name: Store csv as gist
         env:
           GIST_ID: ${{ secrets.BREVO_GIST_ID }}
-        run : |
-          FILE="./brevo-stats.csv"
-          CONTENT=$(<"$FILE")
-          curl -X PATCH "https://api.github.com/gists/$GIST_ID" \
-            -H "Authorization: token ${{ secrets.BREVO_GIST_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d @- <<EOF
-              {
-                "files": {
-                  "brevo-stats.csv": {
-                    "content": "$($CONTENT@Q)"
-                  }
-                }
-              }
-            EOF
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+          token: ${{ secrets.BREVO_GIST_TOKEN }}
+          gist_id: ${GIST_ID}
+          file_path: ./brevo-stats.csv
