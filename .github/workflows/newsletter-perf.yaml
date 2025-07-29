@@ -32,8 +32,6 @@ jobs:
       - name: Store csv as gist
         env:
           GIST_ID: ${{ secrets.BREVO_GIST_ID }}
-        uses: exuanbo/actions-deploy-gist@v1
-        with:
-          token: ${{ secrets.BREVO_GIST_TOKEN }}
-          gist_id: ${GIST_ID}
-          file_path: ./brevo-stats.csv
+        run: |
+          pixi run python src/performance_testing/csv2gist.py \
+           ./brevo-stats.csv $GIST_ID --token ${{ secrets.BREVO_GIST_TOKEN }}
